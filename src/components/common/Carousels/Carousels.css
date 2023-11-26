@@ -1,0 +1,74 @@
+.myCarousal{
+  display: flex;
+  flex-direction: column;
+  margin: 0px 9%; 
+}
+
+.swiper {
+  justify-content: center;
+  width: 100%;
+  padding: 0px 3% 0px 4%;
+  display: flex; 
+}
+
+.swiper-slide {
+  display: flex;
+
+}
+.swiper-wrapper {
+  margin-bottom: 4rem;
+  justify-content: flex-start;
+
+}
+.swiper-pagination-bullet {
+  background-color: #dfd8ed;
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: rgba(147, 125, 194, 1);
+  opacity: 1;
+}
+.swiper-pagination {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  color: rgba(147, 125, 194, 1);
+}
+:root {
+  --swiper-navigation-size: 13px;
+  --swiper-pagination-bullet-size:10px;
+}
+.swiper-button-prev {
+  left: 0px;
+  border: 1px solid rgba(147, 125, 194, 1);
+  border-radius: 21px;
+  padding: 12px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 38%;
+  z-index: 1000;
+}
+.swiper-button-next {
+  right: 8px;
+  border: 1px solid rgba(147, 125, 194, 1);
+  border-radius: 21px;
+  padding: 12px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 38%;
+  z-index: 1000;
+} 
+
+
