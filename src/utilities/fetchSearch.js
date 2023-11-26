@@ -10,14 +10,32 @@ export const searches = async (debouncedSearchTerm, setResult, navigate) => {
         maxResults: 10,
       },
     });
-    const results = respond.data.items || [];
-    setResult(results);
-
-    navigate("/search", { state: { results } });
+    if (
+      respond &&
+      respond?.data &&
+      respond?.data?.items &&
+      respond?.data?.items?.length > 0 &&
+      Array.isArray(respond.data.items) &&
+      respond?.data?.items?.every((item) => item && item.id && item.volumeInfo)
+    ) {
+      const results = respond?.data?.items || [];
+      setResult(results);
+      navigate("/search", { state: { results } });
+    } else {
+      console.error("Invalid data format:", data);
+      return [];
+    }
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching book details from API:", error.message);
+    return [];
   }
+
 };
+
+
+
+
+
 
 
 
