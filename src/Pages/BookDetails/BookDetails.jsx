@@ -34,9 +34,7 @@ const BookDetails = () => {
     saveFavoritesToLocalStorage(favorites);
   }, [favorites]);
 
-  useEffect(() => {
-    FetchData(setIsLoading, setBooks);
-  }, []);
+
 
   const bookItems = [
     { image: "/assets/images/book-slider/s3.png" },
