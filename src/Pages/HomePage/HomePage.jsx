@@ -54,9 +54,6 @@ const HomePage = () => {
     saveFavoritesToLocalStorage(favorites);
   }, [favorites]);
 
-  useEffect(() => {
-    FetchData(setIsLoading, setBooks);
-  }, []);
 
   return (
     <>
