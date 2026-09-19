@@ -3,15 +3,13 @@ import axios from "axios";
 
 export const fetchBookDetails = async (bookId, setBook) => {
   try {
-    const response = await axios.get(process.env.REACT_APP_BOOKS_API, {
-      params: {
-        q: bookId,
-      },
-    });
+const response = await axios.get(
+      `${process.env.REACT_APP_BOOKS_API}/${bookId}`   
+    );
 
-    if (response?.status === 200 && response?.data?.items?.length > 0) {
+    if (response?.status === 200 && response?.data?.volumeInfo) {
       const { title, authors, saleInfo, description, imageLinks } =
-        response.data.items[0].volumeInfo;
+        response.data.volumeInfo;   
 
       setBook({
         title: title || "Chain of Gold: The Last Hours #1",
