@@ -13,7 +13,7 @@ export const searches = async (debouncedSearchTerm, setResult, navigate) => {
     const results = respond.data.items || [];
     setResult(results);
 
-    navigate("/search", { state: { results } });
+    navigate("/search", { state: { results }, replace: true });
   } catch (error) {
     console.error("Error fetching data:", error);
   }
