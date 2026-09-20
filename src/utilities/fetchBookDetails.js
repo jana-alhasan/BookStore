@@ -12,6 +12,7 @@ const response = await axios.get(
         response.data.volumeInfo;   
 
       setBook({
+        id: bookId || 1, 
         title: title || "Chain of Gold: The Last Hours #1",
         authors: authors ? authors.join(", ") : "No Authors",
         price:
