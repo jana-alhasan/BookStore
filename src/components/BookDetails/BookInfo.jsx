@@ -9,7 +9,8 @@ import Quantity from "./Quantity";
 import Rating from "./rating";
 import useStyles from "./styles";
 
-const BookInfo = ({ title, authors, description }) => {
+const BookInfo = ({ title, authors, description ,isFavorite,  
+  onFavoriteClick,  }) => {
 const classes = useStyles();
 const [quantity, setQuantity] = useState(1);  
 
@@ -44,6 +45,9 @@ const handleDecrease = () => {
           variant="contained"
           className={classes.favorite}
           startIcon={<FavoriteIcon />}
+          onClick={onFavoriteClick}
+          >
+    {isFavorite ? "Favorited" : "Favorite"}  
         >
           Favorite
         </Button>
