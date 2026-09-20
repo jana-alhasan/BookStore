@@ -3,10 +3,10 @@ import React from "react";
 import { IconButton } from "@material-ui/core";
 import useStyles from "./styles";
 
-const Quantity = ({ icon}) => {
+const Quantity = ({ icon, onClick }) => {
   const classes = useStyles();
   return (
-    <IconButton >
+    <IconButton onClick={onClick} >
       {React.cloneElement(icon, { className: classes.iconButton })}
     </IconButton>
   );
