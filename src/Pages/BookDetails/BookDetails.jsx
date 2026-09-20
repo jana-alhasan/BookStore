@@ -79,6 +79,9 @@ const BookDetails = () => {
               title={book.title}
               authors={book.authors}
               description={book.description}
+              book={book}                             
+              isFavorite={isBookInFavorites(book)}          
+              onFavoriteClick={() => handleFavoriteClick(book)}
             />
             <MoreInfo infoItems={information} />
           </Grid>
