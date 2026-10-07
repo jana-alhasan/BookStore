@@ -1,65 +1,37 @@
-/* eslint-disable react/prop-types */
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search } from "@material-ui/icons";
-import {
-  TextField,
-  IconButton,
-  InputAdornment,
-  Hidden,
-} from "@material-ui/core";
-import { useSelector,useDispatch } from "react-redux";
+import SearchIcon from "@mui/icons-material/Search";
+import { InputAdornment, TextField } from "@mui/material";
 import useDebounce from "../../CustomHooks/useDebounce";
-import { searches} from "../../../utilities/fetchSearch";
-import useStyles from "./styles";
-
 
 const SearchInput = () => {
-  const classes = useStyles();
-  const [searchTerm, setSearch] = useState("");
-  const [result, setResult] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    setSearch(e.target.value);
-  };
-  
-
-  const debouncedSearchTerm = useDebounce(searchTerm, 1500);
-
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      searches(debouncedSearchTerm, setResult, navigate);
+    const query = debouncedSearchTerm.trim();
+    if (query) {
+      navigate(`/search?q=${encodeURIComponent(query)}`);
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, navigate]);
 
   return (
-    <>
-      <Hidden smDown>
-        <TextField
-          size="small"
-          label="Type any book here"
-          variant="filled"
-          className={classes.search}
-          value={searchTerm}
-          onChange={handleInputChange}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton>
-                  <Search />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Hidden>
-      <Hidden mdUp>
-        <IconButton>
-          <Search className={classes.searchIcon} />
-        </IconButton>
-      </Hidden>
-    </>
+    <TextField
+      size="small"
+      label="Search books"
+      value={searchTerm}
+      onChange={(event) => setSearchTerm(event.target.value)}
+      fullWidth
+      inputProps={{ "aria-label": "Search books" }}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <SearchIcon aria-hidden="true" />
+          </InputAdornment>
+        ),
+      }}
+    />
   );
 };
 
