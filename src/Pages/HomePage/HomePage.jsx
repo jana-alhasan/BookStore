@@ -8,7 +8,7 @@ const HomePage = () => {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const { favorites, isBookInFavorites, handleFavoriteClick } = useFavorites();
+  const { isBookInFavorites, handleFavoriteClick } = useFavorites();
 
   useEffect(() => {
     let active = true;
@@ -67,11 +67,10 @@ const HomePage = () => {
 
       {!isLoading && !error && books.length > 0 && (
         <BooksCarousels
-          carusalTitle="Featured books"
+          title="Featured books"
           books={books}
           isBookInFavorites={isBookInFavorites}
           handleFavoriteClick={handleFavoriteClick}
-          favorites={favorites}
         />
       )}
     </Container>
