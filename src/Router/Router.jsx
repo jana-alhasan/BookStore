@@ -1,22 +1,20 @@
 import React from "react";
-import { createBrowserRouter} from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import Layout from "../Layout/Layout";
-import BookInfo from "../components/Book/BookInfo";
 import HomePage from "../Pages/HomePage/HomePage";
 import BookDetails from "../Pages/BookDetails/BookDetails";
 import SearchPage from "../Pages/SearchPage/SearchPage";
+import FavoritesPage from "../Pages/FavoritesPage/FavoritesPage";
 
-
-
-
-const Routes = createBrowserRouter([
+const Routes = createHashRouter([
   {
     path: "/",
-    element: <Layout/>,
+    element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "/BookDetails/:bookId", element: <BookDetails/> },
-      { path: "/search", element: <SearchPage/> },   
+      { path: "BookDetails/:bookId", element: <BookDetails /> },
+      { path: "search", element: <SearchPage /> },
+      { path: "favorites", element: <FavoritesPage /> },
     ],
   },
 ]);
