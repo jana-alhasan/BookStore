@@ -1,0 +1,31 @@
+name: BookStore Audit Build
+
+on:
+  push:
+    branches:
+      - bs-audit-hardening
+
+permissions:
+  contents: read
+
+jobs:
+  audit-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Show legacy imports and obvious debug markers
+        run: |
+          echo '--- @material-ui imports ---'
+          grep -R --line-number '@material-ui/' src || true
+          echo '--- axios imports ---'
+          grep -R --line-number -E "from ['\"]axios['\"]|require\(['\"]axios['\"]\)" src || true
+          echo '--- console usage ---'
+          grep -R --line-number 'console\.' src || true
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build production bundle
+        run: npm run build
