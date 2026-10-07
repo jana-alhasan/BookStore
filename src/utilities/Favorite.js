@@ -1,20 +1,30 @@
+const FAVORITES_KEY = "favorites";
+
 export const getStoredFavorites = () => {
-  try {
-    const storedFavorites = localStorage.getItem("favorites");
-    if (storedFavorites) {
-      return JSON.parse(storedFavorites);
-    }
+  if (typeof window === "undefined") {
     return [];
-  } catch (error) {
-    console.error("Error parsing favorites from localStorage:", error);
+  }
+
+  try {
+    const storedFavorites = window.localStorage.getItem(FAVORITES_KEY);
+    const parsed = storedFavorites ? JSON.parse(storedFavorites) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
     return [];
   }
 };
 
 export const saveFavoritesToLocalStorage = (favorites) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
   try {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  } catch (error) {
-    console.error("Error saving favorites to localStorage:", error);
+    window.localStorage.setItem(
+      FAVORITES_KEY,
+      JSON.stringify(Array.isArray(favorites) ? favorites : [])
+    );
+  } catch {
+    // Ignore storage failures and keep the in-memory UI usable.
   }
 };

@@ -1,109 +1,79 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { Container, Grid, Stack } from "@mui/material";
-import { LocalShipping, Star } from "@mui/icons-material";
-import BookImage from "../../components/Book/BookImage";
-import BookInfo from "../../components/Book/BookInfo";
-import Discount from "../../components/Book/Discount";
-import Scoll from "../../components/Book/Scoll";
+import React, { useEffect, useState } from "react";
+import { Alert, Box, Container, Skeleton, Stack, Typography } from "@mui/material";
 import BooksCarousels from "../../components/common/BooksCarousels/BooksCarousels";
 import { useFavorites } from "../../components/CustomHooks/useFavorite";
-import { FetchData } from "../../utilities/FetchData";
-import Benifict from "../../components/Book/Benefict";
-import {
-  saveFavoritesToLocalStorage,
-  getStoredFavorites,
-} from "../../utilities/Favorite";
-import SkeletonLoader from "../../Skeleton/Skeleton";
-import useStyles from "../../components/Book/styles";
+import { fetchFeaturedBooks } from "../../utilities/booksApi";
 
 const HomePage = () => {
-  const classes = useStyles();
-  const [isLoading, setIsLoading] = useState(true);
   const [books, setBooks] = useState([]);
-  const { favorites, setFavorites, isBookInFavorites, handleFavoriteClick } =
-    useFavorites();
-
-
-  const benefits = [
-    {
-      icon: <LocalShipping className={classes.icon} />,
-      text: "Free shipping over 50$",
-    },
-    {
-      icon: <Star className={classes.icon} />,
-      text: "Save with loyalty points",
-    },
-    {
-      icon: (
-        <img
-          src="../../assets/images/main-page/Book open.svg"
-          alt="Book Open Icon"
-        />
-      ),
-      text: "Read a few pages",
-    },
-  ];
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { isBookInFavorites, handleFavoriteClick } = useFavorites();
 
   useEffect(() => {
-    const storedFavorites = getStoredFavorites();
-    setFavorites(storedFavorites);
-    FetchData(setIsLoading, setBooks);
-  }, [setFavorites]);
+    let active = true;
 
-  useEffect(() => {
-    saveFavoritesToLocalStorage(favorites);
-  }, [favorites]);
+    const loadBooks = async () => {
+      setIsLoading(true);
+      setError("");
+      try {
+        const result = await fetchFeaturedBooks();
+        if (active) {
+          setBooks(result);
+        }
+      } catch {
+        if (active) {
+          setError("Books could not be loaded right now. Please try again later.");
+        }
+      } finally {
+        if (active) {
+          setIsLoading(false);
+        }
+      }
+    };
 
+    loadBooks();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
-    <>
-      <Container maxWidth="lg" className={classes.container}>
-        <Grid container justifyContent="space-evenly">
-          <Grid item xs={12} sm={6} md={6}>
-            <Stack direction={"row"} spacing={5}>
-              <Scoll />
-              <BookInfo />
-            </Stack>
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <Stack direction={"row"} justifyContent={"center"}>
-              <Discount />
-              <BookImage />
-            </Stack>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2} justifyContent="start">
-          {benefits.map((benefit, index) => (
-            <Grid item xs={12} md={6} lg={4} key={index}>
-              <Benifict {...benefit} index={index} />
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+    <Container maxWidth="lg" sx={{ py: { xs: 4, md: 7 } }}>
+      <Stack spacing={1} sx={{ mb: 4 }}>
+        <Typography component="h1" variant="h3" fontWeight={700}>
+          Explore books
+        </Typography>
+        <Typography color="text.secondary" sx={{ maxWidth: 720 }}>
+          Browse public Google Books data, search the catalog, open book details,
+          and save favorites locally in your browser.
+        </Typography>
+      </Stack>
 
-      <stack>
-        {isLoading ? (
-          <SkeletonLoader />
-        ) : (
-          <>
-            <BooksCarousels
-              carusalTitle={"Selected For You"}
-              books={books}
-              isBookInFavorites={isBookInFavorites}
-              handleFavoriteClick={handleFavoriteClick}
-              favorites={favorites}
-            />
-            <BooksCarousels
-              carusalTitle={"You Must buy it now"}
-              books={books}
-              isBookInFavorites={isBookInFavorites}
-              handleFavoriteClick={handleFavoriteClick}
-              favorites={favorites}
-            />
-          </>
-        )}
-      </stack>
-    </>
+      {isLoading && (
+        <Stack spacing={2} aria-label="Loading books">
+          <Skeleton variant="text" width={220} height={52} />
+          <Skeleton variant="rounded" height={340} />
+        </Stack>
+      )}
+
+      {!isLoading && error && <Alert severity="error">{error}</Alert>}
+
+      {!isLoading && !error && books.length === 0 && (
+        <Box py={6} textAlign="center">
+          <Typography>No books were returned for this collection.</Typography>
+        </Box>
+      )}
+
+      {!isLoading && !error && books.length > 0 && (
+        <BooksCarousels
+          title="Featured books"
+          books={books}
+          isBookInFavorites={isBookInFavorites}
+          handleFavoriteClick={handleFavoriteClick}
+        />
+      )}
+    </Container>
   );
 };
 

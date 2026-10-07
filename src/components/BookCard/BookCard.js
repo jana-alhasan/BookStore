@@ -1,72 +1,71 @@
-/* eslint-disable react/prop-types */
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Button,
+  Box,
   Card,
+  CardActionArea,
   CardContent,
   CardMedia,
+  IconButton,
+  Stack,
   Typography,
-  Box,
-} from "@material-ui/core";
-import { ShoppingCart, Favorite, FavoriteBorder } from "@material-ui/icons";
-import useStyles from "./styles";
+} from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
+const fallbackCover =
+  "https://books.google.com/googlebooks/images/no_cover_thumb.gif";
 
 const BookCard = ({ book, isBookInFavorites, handleFavoriteClick }) => {
-  const classes = useStyles();
   const navigate = useNavigate();
+  const volumeInfo = book?.volumeInfo || {};
+  const saleInfo = book?.saleInfo || {};
+  const price = saleInfo.retailPrice || saleInfo.listPrice;
+  const isFavorite = isBookInFavorites(book);
 
-  const handleCardClick = () => {
-    navigate(`/BookDetails/${book.id}`);
+  const handleFavorite = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    handleFavoriteClick(book);
   };
 
   return (
-    <Card className={classes.card}>
-      <CardMedia
-        onClick={handleCardClick}
-        component="img"
-        height={414.575}
-        alt={book.volumeInfo.title || "No Title"}
-        image={
-          book.volumeInfo.imageLinks?.thumbnail ||
-          "../images/book-slider/prin-img.png"
-        }
-      />
-      <CardContent className={classes.cardContent}>
-        <Typography
-          className={classes.title}
-          variant="subtitle1"
-          onClick={handleCardClick}
-        >
-          {book.volumeInfo.title || "No Title"}
-        </Typography>
-        <Typography
-          className={classes.authors}
-          variant="body2"
-          color="text.secondary"
-        >
-          {book.volumeInfo.authors
-            ? book.volumeInfo.authors.join(", ")
-            : "No authors"}
-        </Typography>
-        <Box className={classes.priceContainer}>
-          <Typography className={classes.price} variant="body2">
-            22.45
+    <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <CardActionArea
+        onClick={() => navigate(`/BookDetails/${book.id}`)}
+        sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "stretch" }}
+      >
+        <CardMedia
+          component="img"
+          height="280"
+          alt={`${volumeInfo.title || "Book"} cover`}
+          image={volumeInfo.imageLinks?.thumbnail || fallbackCover}
+          sx={{ objectFit: "contain", p: 2, bgcolor: "grey.50" }}
+        />
+        <CardContent sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="h3" gutterBottom>
+            {volumeInfo.title || "Untitled book"}
           </Typography>
-          {isBookInFavorites(book) ? (
-            <Favorite
-              onClick={() => handleFavoriteClick(book)}
-              className={classes.fav}
-            />
-          ) : (
-            <FavoriteBorder onClick={() => handleFavoriteClick(book)} />
-          )}
-        </Box>
-        <Button variant="contained" className={classes.addButton}>
-          <ShoppingCart />
-          Add to Cart
-        </Button>
-      </CardContent>
+          <Typography variant="body2" color="text.secondary">
+            {volumeInfo.authors?.join(", ") || "Author not listed"}
+          </Typography>
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body2" fontWeight={600}>
+              {price
+                ? `${price.amount} ${price.currencyCode || ""}`.trim()
+                : "Price not listed"}
+            </Typography>
+          </Box>
+        </CardContent>
+      </CardActionArea>
+      <Stack direction="row" justifyContent="flex-end" sx={{ px: 1, pb: 1 }}>
+        <IconButton
+          onClick={handleFavorite}
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        >
+          {isFavorite ? <FavoriteIcon color="secondary" /> : <FavoriteBorderIcon />}
+        </IconButton>
+      </Stack>
     </Card>
   );
 };
