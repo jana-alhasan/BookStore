@@ -1,47 +1,75 @@
 # BookStore
 
-A responsive book browsing web app built with React, using the Google Books
-API to display, search, and explore book details.
+A responsive React book-exploration app built as an individual frontend portfolio project. It uses the public Google Books API for catalog/search/detail data and local browser storage for favorites.
 
-## ✨ Features
+## Purpose
 
-- **Browse Books** — Home page displaying a curated collection of books
-- **Search** — Debounced live search across the Google Books catalog
-- **Book Details** — Dedicated page per book with cover image, description, and info
-- **Favorites** — Add/remove books to a favorites list, persisted in localStorage
-- **Related Collection** — Carousel of related books shown on the details page
-- **Loading States** — Skeleton loaders while data is being fetched
+The project demonstrates API-driven frontend work: asynchronous data states, refresh-safe client-side routing, debounced search, reusable book cards, real book-detail data, and browser-persisted favorites. It is a book browser, not an e-commerce/cart application.
 
-## 🛠️ Built With
+## My role
 
-- **React** — UI library
-- **React Router v6** — Client-side routing
-- **MUI (Material UI v5)** — Component library and styling
-- **Google Books API** — Book data source
-- **use-debounce** — Debounced search input
+I built this project individually. The repository can prove the frontend implementation and code-visible features below; it does not claim ownership of Google Books data or any external business/service behavior.
 
-## ⚙️ Setup
+## Verified features
 
-This project reads the Books API base URL from an environment variable.
+- Browse a featured collection loaded from the Google Books API.
+- Search Google Books from a debounced header input.
+- Keep search routes refresh-safe through URL query parameters.
+- Open a dedicated book-detail route that fetches the requested volume by id.
+- Display available cover, authors, description, rating, categories, publisher, publication date, page count, language, and sale price when Google Books provides them.
+- Add/remove favorites and persist them in `localStorage`.
+- Open a dedicated Favorites page with an empty state.
+- Show loading skeletons, empty states, and API error states.
+- Use HashRouter-based routes so direct navigation works on static GitHub Pages hosting.
 
-1. Copy `.env.example` to a new file named `.env`
-2. No API key is required for basic public volume lookups
-3. Run `npm install` then `npm start`
+## Technical implementation
 
+- **React 18 + JavaScript**
+- **React Router v6** with `createHashRouter`
+- **Material UI v5**
+- **Google Books REST API** via the browser `fetch` API
+- **Custom debounce hook** for search input behavior
+- **Custom favorites hook + localStorage** persistence
+- **Swiper** for the featured-book carousel
+- **Jest / React Scripts test runner** for API helper and persistence regression coverage
+- **GitHub Actions** for reproducible install, tests, production build, and Pages publishing
+
+The external API access is centralized in `src/utilities/booksApi.js`, while the UI consumes the returned Google Books shapes without introducing an unnecessary state-management library for this project.
+
+## Routes
+
+- `#/` — featured books
+- `#/search?q=...` — refresh-safe search results
+- `#/BookDetails/:bookId` — book details
+- `#/favorites` — locally saved favorites
+
+## Data and limitations
+
+Google Books is an external public data source. Fields vary by volume, so the UI intentionally falls back when cover images, prices, descriptions, ratings, or metadata are not supplied. Favorites are local to the current browser; there is no user account/backend synchronization.
+
+This project does **not** implement a cart, checkout, payments, or book purchasing flow.
+
+## Run locally
+
+```bash
+npm install --legacy-peer-deps
+npm start
 ```
+
+Create a production build with:
+
+```bash
+npm run build
+```
+
+The default public API endpoint is `https://www.googleapis.com/books/v1/volumes`. It can optionally be overridden locally with:
+
+```text
 REACT_APP_BOOKS_API=https://www.googleapis.com/books/v1/volumes
 ```
 
-## 🚧 Status
+No API key is required for the public lookups used by this demo.
 
-Home page browsing, search, and the favorites system are fully functional.
-The book details page is being finalized — see Known Issues below.
+## Current status
 
-### Planned Next
-- Decide on and implement a lightweight cart flow (currently no cart system exists)
-
-## 🎯 What I Learned
-
-Working with a public REST API (Google Books) for both search and detail
-views, managing debounced search input, and persisting user preferences
-(favorites) with localStorage independent of any backend.
+The core browse, search, detail, and favorites flows are implemented. The project is being prepared for its verified GitHub Pages live demo; the live URL will be added here only after final deployment validation.
