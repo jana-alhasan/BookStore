@@ -2,6 +2,8 @@
 
 A responsive React book-exploration app built as an individual frontend portfolio project. It uses the public Google Books API for catalog/search/detail data and local browser storage for favorites.
 
+**Live demo:** https://jana-alhasan.github.io/BookStore/
+
 ## Purpose
 
 The project demonstrates API-driven frontend work: asynchronous data states, refresh-safe client-side routing, debounced search, reusable book cards, real book-detail data, and browser-persisted favorites. It is a book browser, not an e-commerce/cart application.
@@ -70,6 +72,12 @@ REACT_APP_BOOKS_API=https://www.googleapis.com/books/v1/volumes
 
 No API key is required for the public lookups used by this demo.
 
+## Validation and CI
+
+GitHub Actions performs a reproducible dependency install, rejects legacy Material UI v4 imports, runs the focused test suite, and builds the production bundle. A separate workflow publishes the current build to the `gh-pages` branch.
+
+The deployed GitHub Pages version has been validated after activation, including page load and the main browse/search/detail/favorites routing flow.
+
 ## Current status
 
-The core browse, search, detail, and favorites flows are implemented. The project is being prepared for its verified GitHub Pages live demo; the live URL will be added here only after final deployment validation.
+The core browse, search, detail, and favorites flows are implemented, tested, documented, and deployed. Further work is maintenance/polish rather than a blocker for portfolio review.
